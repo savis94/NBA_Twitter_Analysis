@@ -8,12 +8,12 @@ library(shinythemes)
 library(dplyr)
 library(plotly)
 library(ggwordcloud)
-#setwd("~/Avis_Miller_Project/ShinyAppProject/data")
+#setwd("~/Avis_Miller_Project/ShinyAppProject/")
 #load data
 
-team <- read.csv("data/teamsfinal.csv")
-position <- read.csv("data/positiontab.csv")
-player <- read.csv("data/playertab.csv")
+team <- read.csv('teamsfinal.csv')
+position <- read.csv('positiontab.csv')
+player <- read.csv('playertab.csv')
 
 
 
@@ -41,7 +41,7 @@ ui <- fluidPage(
                                                    choices=c(player$player),
                                                    multiple=TRUE),
 
-                                       actionButton('playerbutton', label = 'Run'),
+                                       actionButton('playerbutton', label = 'Search'),
                          ),
 
                          mainPanel(#output will be player stats vs league (can do a stacked bar chart. Surplus will be green
@@ -95,33 +95,34 @@ server <- function(input, output) {
   #transpose the data
   library(reshape)
   sal_play <- player
-  sal_play$Salary_Ten_Thousands <- sal_play$Salary_Ten_Thousands*100
+  sal_play$salary_millions <- sal_play$salary_millions*100
   melt_player <- melt(sal_play,id = c('player'))
   playerbutton <- eventReactive(input$playerbutton, {melt_player %>% filter(player %in% input$chooseplayer)})
 
   output$wordcloudstats <- renderPlot({
-    a <- ggplot(player, aes(label = player, size=Salary_Ten_Thousands, color=player)) +
+    a <- ggplot(player, aes(label = player, size=salary_millions, color=player)) +
       geom_text_wordcloud_area(rm_outside=TRUE, eccentricity=0.5, shape="diamond") +
       scale_radius(range = c(0, 15), limits = c(0, NA)) +
       theme_minimal()
-    b <- ggplot(player, aes(label = player, size=Twitter_Retweet_Count, color=player)) +
+    b <- ggplot(player, aes(label = player, size=twitter_retweet_count, color=player)) +
       geom_text_wordcloud_area(rm_outside=TRUE, eccentricity=0.5, shape="diamond") +
       scale_radius(range = c(2, 25), limits = c(0, NA)) +
       theme_minimal()
-    c <- ggplot(player, aes(label = player, size=Twitter_Favorite_Count, color=player)) +
+    c <- ggplot(player, aes(label = player, size=twitter_favorite_count, color=player)) +
       geom_text_wordcloud_area(rm_outside=TRUE, eccentricity=0.5, shape="diamond") +
       scale_radius(range = c(2, 25), limits = c(0, NA)) +
       theme_minimal()
     {if(input$wordcloud=='Player Salary') a
-      else if(input$wordcloud=='Twitter Retweet Count') b
-      else if (input$wordcloud=='Twitter Favorite Count') c}
+      else if(input$player=='Twitter Retweet Count') b
+      else if (input$player=='Twitter Favorite Count') c}
   })
 
 
   output$playerstats <-renderPlotly({
     playerstats <- ggplot(playerbutton(), aes(x=player, y=value, fill=variable)) +
       geom_bar(position='dodge', stat='identity') + xlab("Player") + ylab("Value") +
-      theme_classic() + labs(fill='Statistic') + scale_fill_manual(values = c("blue", "orange", "magenta", "yellow"), labels = c("Twitter Favorite Count","Twitter Retweet Count", "Salary (Ten Thousands)"))
+      scale_color_hue(labels = c("Twitter Favorite Count","Twitter Retweet Count", "Salary (Ten Thousands"))+
+      theme_classic()
 
     ggplotly(playerstats)
   })
@@ -146,10 +147,11 @@ server <- function(input, output) {
 
     positionstats <- ggplot(position_subset(), aes(x=positioncol, y=value, fill=stat)) +
       geom_bar(position='dodge', stat='identity') + xlab("Position") + ylab("Value") +
-      theme_classic() + labs(fill='Statistic')
+      theme_classic()
 
     ggplotly(positionstats)
   })
 }
+
 shinyApp(ui = ui, server = server)
 
