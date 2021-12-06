@@ -1,5 +1,5 @@
 # NBA_Twitter_Analysis
-Looking at player's Twitter activity and salary, and comparing it alongside their win percentage and fan attendance 
+Looking at player's Twitter activity, salary, and comparing them with their win percentage and fan attendance 
 <br>
 App Link: https://cltdsba.shinyapps.io/NBA_Twitter_Analysis/
 
