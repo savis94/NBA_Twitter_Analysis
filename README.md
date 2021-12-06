@@ -7,7 +7,7 @@ App Link: https://cltdsba.shinyapps.io/NBA_Twitter_Analysis/
 
 <h6> Reproducing the Report </h6>
 
-If you wish to ren the app from R Studio instead of going to the link above, you can use the following steps: 
+If you wish to run the app from R Studio instead of going to the above link, you can use the following steps: 
 <ol>
 <li> Click on the "Code" button in the top right and select "Download Zip" from the drop down list. </li>
 <li> Pick the location you want the files extracted to. </li>
