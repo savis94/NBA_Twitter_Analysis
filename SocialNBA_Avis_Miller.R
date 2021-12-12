@@ -88,11 +88,11 @@ ui <- fluidPage(
                                                   multiple=TRUE),
 
 
-                                      h6('PG = Point Guard'),
-                                      h6('SG = Shooting Guard'),
-                                      h6('SF = Small Forward'),
-                                      h6('PF = Power Forward'),
-                                      h6('C = Center')),
+                         h6('PG = Point Guard'),
+                         h6('SG = Shooting Guard'),
+                         h6('SF = Small Forward'),
+                         h6('PF = Power Forward'),
+                         h6('C = Center')),
 
                          mainPanel(
                            h3('Differences in Salary and Twitter Activity by Position'),
